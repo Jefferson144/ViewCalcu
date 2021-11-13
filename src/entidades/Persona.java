@@ -9,54 +9,52 @@ package entidades;
  *
  * @author Jefferson Narvaez
  */
-
 public class Persona {
-    
-    private long numeroIdentificacion;
-    private String nombreApellido;
-    private int edad;
 
-    public Persona(long numeroIdentificacion, String nombreApellido, int edad) {
+    private long numeroIdentificacion;
+    private String nombre;
+    private String apellido;
+    private long telefono;
+
+    public Persona(long numeroIdentificacion, String nombre, String apellido, long telefono) {
         this.numeroIdentificacion = numeroIdentificacion;
-        this.nombreApellido = nombreApellido;
-        this.edad = edad;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.telefono = telefono;
     }
 
     public Persona() {
-        
+
     }
 
     public long getNumeroIdentificacion() {
         return numeroIdentificacion;
     }
 
-    public void setNumeroIdentificacion(long numeroIdentificacion) {
-        this.numeroIdentificacion = numeroIdentificacion;
+    public String getNombre() {
+        return nombre;
     }
 
-    public String getNombreApellido() {
-        return nombreApellido;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setNombreApellido(String nombreApellido) {
-        this.nombreApellido = nombreApellido;
+    public String getApellido() {
+        return apellido;
     }
 
-    public int getEdad() {
-        return edad;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
+    public long getTelefono() {
+        return telefono;
     }
 
-    @Override
-    public String toString() {
-        return "Persona{" + "numeroIdentificacion=" + numeroIdentificacion + ", nombreApellido=" + nombreApellido + ", edad=" + edad + '}';
+    public void setTelefono(long telefono) {
+        this.telefono = telefono;
     }
     
     
-    
-    
-    
+
 }

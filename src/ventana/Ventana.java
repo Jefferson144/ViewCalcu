@@ -14,7 +14,7 @@ public class Ventana {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IllegalArgumentException, IllegalAccessException{
-        Calculadora.main(args);
+    public static void main(String[] args){
+        CRUD.main(args);
     }
 }

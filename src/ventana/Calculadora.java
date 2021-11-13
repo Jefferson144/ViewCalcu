@@ -25,6 +25,8 @@ public class Calculadora extends javax.swing.JFrame implements KeyListener {
      * Creates new form Calculadora
      * @return 
      */
+    
+    
     public Image ImagenVentana() {
         Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("imagen/calculadora.png"));
         return retValue;
@@ -72,7 +74,7 @@ public class Calculadora extends javax.swing.JFrame implements KeyListener {
         btnSalir = new javax.swing.JButton();
         marcaAgua = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Calculadora");
         setIconImage(ImagenVentana());
         setPreferredSize(new java.awt.Dimension(437, 555));
@@ -542,7 +544,9 @@ public class Calculadora extends javax.swing.JFrame implements KeyListener {
     }//GEN-LAST:event_BotonKeyPressed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        System.exit(0);
+        CRUD ob = new CRUD();
+        ob.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void marcaAguaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_marcaAguaMousePressed
@@ -568,7 +572,7 @@ public class Calculadora extends javax.swing.JFrame implements KeyListener {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
+            UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Calculadora.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -703,5 +707,5 @@ public class Calculadora extends javax.swing.JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }
