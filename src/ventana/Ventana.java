@@ -5,6 +5,8 @@
  */
 package ventana;
 
+
+
 /**
  *
  * @author Jefferson Naravaez
@@ -15,6 +17,6 @@ public class Ventana {
      * @param args the command line arguments
      */
     public static void main(String[] args){
-        CRUD.main(args);
+        Login.main(args);
     }
 }

@@ -1,17 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ventana;
 
 import AppPackage.AnimationClass;
 import entidades.Persona;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import metodoSQL.conexionBancox;
+import metodoSQL.bancoSQL;
 
 /**
  *
@@ -28,7 +30,9 @@ public class CRUD extends javax.swing.JFrame {
     }
 
     Persona dato;
+    bancoSQL metodos = new bancoSQL();
     DefaultTableModel modelo = new DefaultTableModel();
+    public static conexionBancox conexion = conexionBancox.getInstance();
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -89,7 +93,7 @@ public class CRUD extends javax.swing.JFrame {
                 mundoMouseClicked(evt);
             }
         });
-        getContentPane().add(mundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(-70, 210, -1, -1));
+        getContentPane().add(mundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, -1, -1));
 
         Calculadora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/calculadora2.png"))); // NOI18N
         Calculadora.setToolTipText("Click para abrir calculadora");
@@ -98,7 +102,7 @@ public class CRUD extends javax.swing.JFrame {
                 CalculadoraMouseClicked(evt);
             }
         });
-        getContentPane().add(Calculadora, new org.netbeans.lib.awtextra.AbsoluteConstraints(-70, 290, -1, -1));
+        getContentPane().add(Calculadora, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 290, -1, -1));
 
         contribucion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/colaboracion.png"))); // NOI18N
         contribucion.setToolTipText("Click para observar contrubuidores");
@@ -107,7 +111,7 @@ public class CRUD extends javax.swing.JFrame {
                 contribucionMouseClicked(evt);
             }
         });
-        getContentPane().add(contribucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(-70, 380, -1, -1));
+        getContentPane().add(contribucion, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 380, -1, -1));
 
         usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/usuario.png"))); // NOI18N
         usuario.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -225,6 +229,7 @@ public class CRUD extends javax.swing.JFrame {
         boton.add(btnInsertar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
 
         btnSalir.setText("Salir");
+        btnSalir.setFocusable(false);
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
@@ -249,6 +254,7 @@ public class CRUD extends javax.swing.JFrame {
         boton.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 50, 100, -1));
 
         btnLimpiar.setText("Limpiar box");
+        btnLimpiar.setFocusable(false);
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimpiarActionPerformed(evt);
@@ -425,17 +431,12 @@ public class CRUD extends javax.swing.JFrame {
             }
             if (persona == 0) {
                 dato = new Persona(Long.parseLong(txtNumeroIdentificacion.getText()), txtPrimerNombre.getText(), txtPrimerApellido.getText(), Long.parseLong(txtTelefono.getText()));
-                Object[] datos = new Object[4];
-                datos[0] = dato.getNumeroIdentificacion();
-                datos[1] = dato.getNombre();
-                datos[2] = dato.getApellido();
-                datos[3] = dato.getTelefono();
-                modelo.addRow(datos);
-                limpiarCajas();
+                metodos.insertarUsuario(dato);
             } else {
                 JOptionPane.showMessageDialog(null, "Ya se encuentra un usuario con los mismos datos", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
             }
         }
+        limpiarCajas();
     }//GEN-LAST:event_btnInsertarActionPerformed
 
     private void txtNumeroIdentificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumeroIdentificacionActionPerformed
@@ -461,10 +462,10 @@ public class CRUD extends javax.swing.JFrame {
     }//GEN-LAST:event_JTdatosMouseClicked
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        int respuesta = JOptionPane.showConfirmDialog(null, "¿Esta seguro de abandonar?", "Incognita", JOptionPane.YES_NO_OPTION);
-        if (respuesta == 0) {
-            System.exit(0);
-        }
+        Login acceso = new Login();
+        acceso.limpiarCajas();
+        acceso.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
@@ -480,22 +481,37 @@ public class CRUD extends javax.swing.JFrame {
                 }
             }
             if (persona == 1) {
+                int equi = 0;
                 for (int i = 0; i < JTdatos.getRowCount(); i++) {
-                    if (String.valueOf(JTdatos.getValueAt(i, 3)).equalsIgnoreCase(txtTelefono.getText())) {
-                        indice = 1;
+                    if (String.valueOf(JTdatos.getValueAt(i, 3)).equalsIgnoreCase(txtTelefono.getText()) && String.valueOf(JTdatos.getValueAt(i, 0)).equalsIgnoreCase(txtNumeroIdentificacion.getText())) {
+                        equi = 1;
                         break;
                     }
                 }
-                if (indice == 0) {
+                if (equi == 1) {
                     dato = new Persona();
                     dato.setNombre(txtPrimerNombre.getText());
                     dato.setApellido(txtPrimerApellido.getText());
                     dato.setTelefono(Long.parseLong(txtTelefono.getText()));
-                    JTdatos.setValueAt(dato.getNombre(), fila, 1);
-                    JTdatos.setValueAt(dato.getApellido(), fila, 2);
-                    JTdatos.setValueAt(dato.getTelefono(), fila, 3);
+                    dato.setNumeroIdentificacion(Long.parseLong(txtNumeroIdentificacion.getText()));
+                    metodos.actualizarUsuario(dato);
                 } else {
-                    JOptionPane.showMessageDialog(null, "El numero ya se encuentra en uso", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
+                    for (int i = 0; i < JTdatos.getRowCount(); i++) {
+                        if (String.valueOf(JTdatos.getValueAt(i, 3)).equalsIgnoreCase(txtTelefono.getText())) {
+                            indice = 1;
+                            break;
+                        }
+                    }
+                    if (indice == 0) {
+                        dato = new Persona();
+                        dato.setNombre(txtPrimerNombre.getText());
+                        dato.setApellido(txtPrimerApellido.getText());
+                        dato.setTelefono(Long.parseLong(txtTelefono.getText()));
+                        dato.setNumeroIdentificacion(Long.parseLong(txtNumeroIdentificacion.getText()));
+                        metodos.actualizarUsuario(dato);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El numero ya se encuentra en uso", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Ya se encuentra un usuario con los mismos datos", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
@@ -508,19 +524,19 @@ public class CRUD extends javax.swing.JFrame {
         if (txtNumeroIdentificacion.getText().equalsIgnoreCase("Ej : 1110474610")) {
             JOptionPane.showMessageDialog(null, "Digite una referencia real", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            int persona = 0, indice = 0;
+            int persona = 0;
             for (int i = 0; i < JTdatos.getRowCount(); i++) {
                 if (String.valueOf(JTdatos.getValueAt(i, 0)).equalsIgnoreCase(txtNumeroIdentificacion.getText())) {
                     persona = 1;
-                    indice = i;
                     break;
                 }
             }
             if (persona == 1) {
                 int respuesta = JOptionPane.showConfirmDialog(null, "¿Esta seguro de eliminar registro?", "ADVERTENCIA", JOptionPane.YES_NO_OPTION);
                 if (respuesta == 0) {
-                    modelo.removeRow(indice);
-                    JOptionPane.showMessageDialog(null, "Se elimino el registro correctamente", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
+                    dato = new Persona();
+                    dato.setNumeroIdentificacion(Long.parseLong(txtNumeroIdentificacion.getText()));
+                    metodos.eliminarUsuario(dato);
                 } else {
                     JOptionPane.showMessageDialog(null, "Se cancelo la accion", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -537,7 +553,7 @@ public class CRUD extends javax.swing.JFrame {
     }//GEN-LAST:event_CalculadoraMouseClicked
 
     private void mundoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mundoMouseClicked
-         if (java.awt.Desktop.isDesktopSupported()) {
+        if (java.awt.Desktop.isDesktopSupported()) {
             java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
             if (desktop.isSupported(java.awt.Desktop.Action.BROWSE)) {
                 try {
@@ -546,12 +562,12 @@ public class CRUD extends javax.swing.JFrame {
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error es: " + e, "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
                 }
-            }          
+            }
         }
     }//GEN-LAST:event_mundoMouseClicked
 
     private void contribucionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contribucionMouseClicked
-        JOptionPane.showMessageDialog(null,"Proximamente","???",JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Proximamente", "???", JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_contribucionMouseClicked
 
     /**
@@ -563,7 +579,7 @@ public class CRUD extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-         try {
+        try {
             UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(CRUD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -618,6 +634,7 @@ public class CRUD extends javax.swing.JFrame {
         modelo.addColumn("Primer nombre");
         modelo.addColumn("Primer apellido");
         modelo.addColumn("Telefono");
+        limpiarCajas();
     }
 
     public void limpiarCajas() {
@@ -629,6 +646,43 @@ public class CRUD extends javax.swing.JFrame {
         txtPrimerNombre.setForeground(new Color(10066329));
         txtPrimerApellido.setForeground(new Color(10066329));
         txtTelefono.setForeground(new Color(10066329));
+        modelo.setRowCount(0);
+        try {
+            PreparedStatement sentencia_preparada = null;//llamo la libreria y le pongo el nombre y la igualo a nulo/Libreria necesaria para la ejecuccion
+            ResultSet resultado = null;  //tambien el ResultSet el nombre y se iguala a nulo
+            conexionBancox conexion = conexionBancox.getInstance();//creo un objeto a mi clase de ConexionBD
+            Connection con = conexion.getConnection();//Llamo la libreria y le pongo un nombre, esto la igual con la conexion establecida directamente
+            String consulta = "SELECT numeroIdentificacion,primerNombre,primerApellido,telefono FROM usuario ORDER BY numeroIdentificacion asc";
+            //hago una consulta de tipo String y alli va la consulta necesaria
+            sentencia_preparada = con.prepareStatement(consulta);
+            //sentencia preparada va hacer igual a la conexion.sintaxis para que haga la consulta y dentro de sus parametros va la sintaxis necesaria
+            resultado = sentencia_preparada.executeQuery();
+            //resultado que es mi ResultSet va hacer igual a lo que me hizo mi sentencia preparada o variable .funcion
+            ResultSetMetaData rsmd = resultado.getMetaData();
+            //llamo una libreria ResultSetMetaData y le pongo un nombre y eso va hacer igual a resultado y esto es pasandole el resultado de la consulta
+            int cantidad_colum = rsmd.getColumnCount();
+            //variable para saber cuantas columnas hay en la consulta
+            while (resultado.next()) {//el while es para ir recorriendo los datos de la consulta
+                Object[] filas = new Object[cantidad_colum];//creo un array con la cantidad de columnas que hicimos hace poco
+                for (int i = 0; i < filas.length; i++) {//el for es para ir pasando todos los datos a este tipo Objeto 
+                    filas[i] = resultado.getObject(i + 1);//esto es para que diga la columna de la BD
+                }
+                modelo.addRow(filas);//relleno filas por medio del array que creamos
+            }
+            CRUD.conexion.cerrarConexion();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "El error es: " + e);
+        }
+    }
+    
+    public void inicioSesion(String sesion){
+        if (sesion == null){
+            inicio_sesion.setText("ADMIN");
+            inicio_sesion.setFont(new java.awt.Font("Tahoma", 3, 18));
+        } else {
+            inicio_sesion.setText(sesion);
+            inicio_sesion.setFont(new java.awt.Font("Tahoma", 1, 15));
+        }
     }
     
 }

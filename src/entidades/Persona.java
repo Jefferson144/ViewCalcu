@@ -54,6 +54,10 @@ public class Persona {
     public void setTelefono(long telefono) {
         this.telefono = telefono;
     }
+
+    public void setNumeroIdentificacion(long numeroIdentificacion) {
+        this.numeroIdentificacion = numeroIdentificacion;
+    }
     
     
 
