@@ -107,8 +107,7 @@ public class Login extends javax.swing.JFrame {
             ob.limpiarCajas();
             String sesion = metodos.consultarNomApellUsuario(acceso);
             ob.inicioSesion(sesion);
-            this.dispose();
-            
+            this.dispose();     
         } else {
             JOptionPane.showMessageDialog(null, "Datos incorrectos", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
         }

@@ -15,12 +15,14 @@ public class Persona {
     private String nombre;
     private String apellido;
     private long telefono;
+    private String password;
 
-    public Persona(long numeroIdentificacion, String nombre, String apellido, long telefono) {
+    public Persona(long numeroIdentificacion, String nombre, String apellido, long telefono, String password) {
         this.numeroIdentificacion = numeroIdentificacion;
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;
+        this.password = password;
     }
 
     public Persona() {
@@ -57,6 +59,14 @@ public class Persona {
 
     public void setNumeroIdentificacion(long numeroIdentificacion) {
         this.numeroIdentificacion = numeroIdentificacion;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     

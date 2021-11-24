@@ -60,12 +60,13 @@ public class bancoSQL {
         int resultado = 0;
         try {
             Connection conexion = (Connection) conexionBancox.getConnection();
-            String sentencia = ("INSERT INTO usuario (numeroIdentificacion, primerNombre, primerApellido, Telefono) VALUES (?,?,?,?)");
+            String sentencia = ("INSERT INTO usuario (numeroIdentificacion, primerNombre, primerApellido, Telefono, password) VALUES (?,?,?,?,?)");
             sentencia_preparada = conexion.prepareStatement(sentencia);
             sentencia_preparada.setLong(1, datos.getNumeroIdentificacion());
             sentencia_preparada.setString(2, datos.getNombre());
             sentencia_preparada.setString(3, datos.getApellido());
             sentencia_preparada.setLong(4, datos.getTelefono());
+            sentencia_preparada.setString(5, datos.getPassword());
             resultado = sentencia_preparada.executeUpdate();
             if (resultado > 0) {
                 JOptionPane.showMessageDialog(null, "Se inserto correctamente", "Insercion con exito", JOptionPane.INFORMATION_MESSAGE);

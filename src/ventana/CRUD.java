@@ -3,17 +3,23 @@ package ventana;
 import AppPackage.AnimationClass;
 import entidades.Persona;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import metodoSQL.conexionBancox;
 import metodoSQL.bancoSQL;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -59,12 +65,15 @@ public class CRUD extends javax.swing.JFrame {
         primerApellido = new javax.swing.JLabel();
         telefono = new javax.swing.JLabel();
         txtTelefono = new javax.swing.JTextField();
+        contrasena = new javax.swing.JLabel();
+        txtContrasena = new javax.swing.JTextField();
         boton = new javax.swing.JPanel();
         btnInsertar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         separador = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
         JTdatos = new javax.swing.JTable();
@@ -129,7 +138,7 @@ public class CRUD extends javax.swing.JFrame {
         datos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         numeroIdentificacion.setText("Numero de identificacion");
-        datos.add(numeroIdentificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 150, 20));
+        datos.add(numeroIdentificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 150, 20));
 
         txtNumeroIdentificacion.setForeground(new java.awt.Color(153, 153, 153));
         txtNumeroIdentificacion.setText("Ej : 1110474610");
@@ -151,10 +160,10 @@ public class CRUD extends javax.swing.JFrame {
                 txtNumeroIdentificacionKeyTyped(evt);
             }
         });
-        datos.add(txtNumeroIdentificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, 190, 20));
+        datos.add(txtNumeroIdentificacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 0, 190, 20));
 
         primerNombre.setText("Primer nombre");
-        datos.add(primerNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 130, 20));
+        datos.add(primerNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 130, 20));
 
         txtPrimerNombre.setForeground(new java.awt.Color(153, 153, 153));
         txtPrimerNombre.setText("Ej : Jefferson");
@@ -171,7 +180,7 @@ public class CRUD extends javax.swing.JFrame {
                 txtPrimerNombreKeyTyped(evt);
             }
         });
-        datos.add(txtPrimerNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 50, 190, 20));
+        datos.add(txtPrimerNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 30, 190, 20));
 
         txtPrimerApellido.setForeground(new java.awt.Color(153, 153, 153));
         txtPrimerApellido.setText("Ej : Narvaez");
@@ -188,13 +197,13 @@ public class CRUD extends javax.swing.JFrame {
                 txtPrimerApellidoKeyTyped(evt);
             }
         });
-        datos.add(txtPrimerApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 80, 190, 20));
+        datos.add(txtPrimerApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 60, 190, 20));
 
         primerApellido.setText("Primer apellido");
-        datos.add(primerApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, 20));
+        datos.add(primerApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 130, 20));
 
         telefono.setText("Telefono");
-        datos.add(telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 130, 20));
+        datos.add(telefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 130, 20));
 
         txtTelefono.setForeground(new java.awt.Color(153, 153, 153));
         txtTelefono.setText("Ej : 3118122494");
@@ -214,7 +223,30 @@ public class CRUD extends javax.swing.JFrame {
                 txtTelefonoKeyTyped(evt);
             }
         });
-        datos.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 110, 190, 20));
+        datos.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 90, 190, 20));
+
+        contrasena.setText("Contraseña");
+        datos.add(contrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 130, 20));
+
+        txtContrasena.setForeground(new java.awt.Color(153, 153, 153));
+        txtContrasena.setText("Ej : 123");
+        txtContrasena.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtContrasenaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtContrasenaFocusLost(evt);
+            }
+        });
+        txtContrasena.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtContrasenaKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtContrasenaKeyTyped(evt);
+            }
+        });
+        datos.add(txtContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 120, 190, 20));
 
         getContentPane().add(datos, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 100, 350, 150));
 
@@ -235,7 +267,7 @@ public class CRUD extends javax.swing.JFrame {
                 btnSalirActionPerformed(evt);
             }
         });
-        boton.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 90, -1, -1));
+        boton.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, -1, -1));
 
         btnModificar.setText("Modificar");
         btnModificar.addActionListener(new java.awt.event.ActionListener() {
@@ -261,6 +293,14 @@ public class CRUD extends javax.swing.JFrame {
             }
         });
         boton.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(127, 50, 90, -1));
+
+        btnImprimir.setText("imprimir");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+        boton.add(btnImprimir, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, -1, -1));
 
         getContentPane().add(boton, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 110, 230, 140));
         getContentPane().add(separador, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 590, 30));
@@ -419,7 +459,7 @@ public class CRUD extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTelefonoFocusLost
 
     private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
-        if (txtNumeroIdentificacion.getText().equalsIgnoreCase("Ej : 1110474610") || txtPrimerNombre.getText().equalsIgnoreCase("Ej : Jefferson") || txtPrimerApellido.getText().equalsIgnoreCase("Ej : Narvaez") || txtTelefono.getText().equalsIgnoreCase("Ej : 3118122494")) {
+        if (txtNumeroIdentificacion.getText().equalsIgnoreCase("Ej : 1110474610") || txtPrimerNombre.getText().equalsIgnoreCase("Ej : Jefferson") || txtPrimerApellido.getText().equalsIgnoreCase("Ej : Narvaez") || txtTelefono.getText().equalsIgnoreCase("Ej : 3118122494") || txtContrasena.getText().equalsIgnoreCase("Ej : 123")) {
             JOptionPane.showMessageDialog(null, "Digite datos reales", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
         } else {
             int persona = 0;
@@ -430,7 +470,7 @@ public class CRUD extends javax.swing.JFrame {
                 }
             }
             if (persona == 0) {
-                dato = new Persona(Long.parseLong(txtNumeroIdentificacion.getText()), txtPrimerNombre.getText(), txtPrimerApellido.getText(), Long.parseLong(txtTelefono.getText()));
+                dato = new Persona(Long.parseLong(txtNumeroIdentificacion.getText()), txtPrimerNombre.getText(), txtPrimerApellido.getText(), Long.parseLong(txtTelefono.getText()), txtContrasena.getText());
                 metodos.insertarUsuario(dato);
             } else {
                 JOptionPane.showMessageDialog(null, "Ya se encuentra un usuario con los mismos datos", "INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
@@ -570,6 +610,85 @@ public class CRUD extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Proximamente", "???", JOptionPane.PLAIN_MESSAGE);
     }//GEN-LAST:event_contribucionMouseClicked
 
+    private void txtContrasenaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtContrasenaFocusGained
+        if (txtContrasena.getText().equalsIgnoreCase("Ej : 123")) {
+            txtContrasena.setText("");
+            txtContrasena.setForeground(Color.white);
+        }
+    }//GEN-LAST:event_txtContrasenaFocusGained
+
+    private void txtContrasenaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtContrasenaFocusLost
+        if (txtContrasena.getText().equalsIgnoreCase("")) {
+            txtContrasena.setText("Ej : 123");
+            txtContrasena.setForeground(new Color(10066329));
+        }
+    }//GEN-LAST:event_txtContrasenaFocusLost
+
+    private void txtContrasenaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContrasenaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtContrasenaKeyPressed
+
+    private void txtContrasenaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContrasenaKeyTyped
+        if (txtContrasena.getText().length() > 45) {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtContrasenaKeyTyped
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        Object forma;
+        forma = JOptionPane.showInputDialog(null, "Selecione un tipo de reporte",
+                "Forma", JOptionPane.QUESTION_MESSAGE, null,
+                new Object[]{"Consultar usuarios", "Consultar un usuario"}, "Seleccione");
+        if (forma.equals("Consultar usuarios")) {
+            try {
+                Connection conexion = conexionBancox.getConnection();
+
+                JasperReport reporte = null;
+                String path = "reporte\\usuarioReporte.jasper";
+
+                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+
+                JasperPrint jprint = JasperFillManager.fillReport(path, null, conexion);
+
+                JasperViewer view = new JasperViewer(jprint, false);
+
+                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+                view.setVisible(true);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "El error es: " + e);
+            }
+        } else {
+            if (txtNumeroIdentificacion.getText().equalsIgnoreCase("Ej : 1110474610")) {
+                JOptionPane.showMessageDialog(null, "Ingrese un valor real", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            } else {
+                try {
+                    Connection conexion = conexionBancox.getConnection();
+
+                    JasperReport reporte = null;
+                    String path = "reporte\\consultarUsuario.jasper";
+                    Map parametro = new HashMap();
+                    parametro.put("numIden", Long.parseLong(txtNumeroIdentificacion.getText()));
+
+                    reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+
+                    JasperPrint jprint = JasperFillManager.fillReport(path, parametro, conexion);
+
+                    JasperViewer view = new JasperViewer(jprint, false);
+
+                    view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+                    view.setVisible(true);
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "El error es: " + e);
+                }
+            }
+        }
+    }//GEN-LAST:event_btnImprimirActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -605,10 +724,12 @@ public class CRUD extends javax.swing.JFrame {
     private javax.swing.JTable JTdatos;
     private javax.swing.JPanel boton;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnInsertar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JLabel contrasena;
     private javax.swing.JLabel contribucion;
     private javax.swing.JPanel datos;
     private javax.swing.JLabel fondo;
@@ -621,6 +742,7 @@ public class CRUD extends javax.swing.JFrame {
     private javax.swing.JSeparator separador;
     private javax.swing.JLabel telefono;
     private javax.swing.JLabel titulo;
+    private javax.swing.JTextField txtContrasena;
     private javax.swing.JTextField txtNumeroIdentificacion;
     private javax.swing.JTextField txtPrimerApellido;
     private javax.swing.JTextField txtPrimerNombre;
@@ -674,9 +796,9 @@ public class CRUD extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "El error es: " + e);
         }
     }
-    
-    public void inicioSesion(String sesion){
-        if (sesion == null){
+
+    public void inicioSesion(String sesion) {
+        if (sesion == null) {
             inicio_sesion.setText("ADMIN");
             inicio_sesion.setFont(new java.awt.Font("Tahoma", 3, 18));
         } else {
@@ -684,5 +806,5 @@ public class CRUD extends javax.swing.JFrame {
             inicio_sesion.setFont(new java.awt.Font("Tahoma", 1, 15));
         }
     }
-    
+
 }
