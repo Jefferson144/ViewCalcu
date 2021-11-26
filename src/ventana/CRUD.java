@@ -644,10 +644,7 @@ public class CRUD extends javax.swing.JFrame {
             try {
                 Connection conexion = conexionBancox.getConnection();
 
-                JasperReport reporte = null;
-                String path = "reporte\\usuarioReporte.jasper";
-
-                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                JasperReport path = (JasperReport) JRLoader.loadObject(getClass().getResource("/reporte/usuarioReporte.jasper"));
 
                 JasperPrint jprint = JasperFillManager.fillReport(path, null, conexion);
 
@@ -656,7 +653,7 @@ public class CRUD extends javax.swing.JFrame {
                 view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
                 view.setVisible(true);
-
+                   
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "El error es: " + e);
             }
@@ -667,12 +664,10 @@ public class CRUD extends javax.swing.JFrame {
                 try {
                     Connection conexion = conexionBancox.getConnection();
 
-                    JasperReport reporte = null;
-                    String path = "reporte\\consultarUsuario.jasper";
                     Map parametro = new HashMap();
                     parametro.put("numIden", Long.parseLong(txtNumeroIdentificacion.getText()));
 
-                    reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                    JasperReport path = (JasperReport) JRLoader.loadObject(getClass().getResource("/reporte/consultarUsuario.jasper"));
 
                     JasperPrint jprint = JasperFillManager.fillReport(path, parametro, conexion);
 
@@ -764,10 +759,12 @@ public class CRUD extends javax.swing.JFrame {
         txtPrimerNombre.setText("Ej : Jefferson");
         txtPrimerApellido.setText("Ej : Narvaez");
         txtTelefono.setText("Ej : 3118122494");
+        txtContrasena.setText("Ej : 123");
         txtNumeroIdentificacion.setForeground(new Color(10066329));
         txtPrimerNombre.setForeground(new Color(10066329));
         txtPrimerApellido.setForeground(new Color(10066329));
         txtTelefono.setForeground(new Color(10066329));
+        txtContrasena.setForeground(new Color(10066329));
         modelo.setRowCount(0);
         try {
             PreparedStatement sentencia_preparada = null;//llamo la libreria y le pongo el nombre y la igualo a nulo/Libreria necesaria para la ejecuccion

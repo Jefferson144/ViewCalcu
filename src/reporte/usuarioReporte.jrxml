@@ -36,7 +36,7 @@
 		<band height="132" splitType="Stretch">
 			<image>
 				<reportElement x="2" y="0" width="118" height="132" uuid="5e9c139e-49d9-45fb-8070-9ae91b7faf3a"/>
-				<imageExpression><![CDATA["tree1.png"]]></imageExpression>
+				<imageExpression><![CDATA[".\\reporte\\tree1.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement style="Title" x="120" y="10" width="435" height="93" uuid="9c4521e0-4414-4ddf-999f-6e4aa626d724"/>
@@ -64,7 +64,7 @@
 		<band height="91" splitType="Stretch">
 			<image>
 				<reportElement x="2" y="0" width="56" height="80" uuid="6d468b15-2457-4a3d-ae1f-1552b8b85890"/>
-				<imageExpression><![CDATA["tree2.png"]]></imageExpression>
+				<imageExpression><![CDATA[".\\reporte\\tree2.png"]]></imageExpression>
 			</image>
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="2" y="90" width="551" height="1" uuid="bfd02047-965a-4365-92b5-f6ee09f9dfb0"/>
